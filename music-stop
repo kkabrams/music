@@ -1,0 +1,5 @@
+#!/bin/sh
+kill -9 $(cat ${PREFIX}/var/run/music-init.pid)
+rm -f ${PREFIX}/var/run/music-init.pid
+kill -9 $(cat ${PREFIX}/var/run/music-player.pid)
+rm -f ${PREFIX}/var/run/music-player.pid

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec kill -USR2 "$(cat ${PREFIX}/var/run/music-init.pid)"

@@ -1,0 +1,14 @@
+#!/bin/bash
+pid="$(cat "${PREFIX}/var/run/music-player.pid")"
+state="$(ps -o state= -p "$pid")"
+if [ "$state" ];then
+  if [ "$state" = "T" ];then #it is stopped. let's send it a CONT
+    exec music-unpause $pid
+  fi
+  if [ "$state" = "S" ];then #it is running, let's pause it.
+    exec music-pause $pid
+  fi
+else
+  nohup music-init &
+  disown
+fi

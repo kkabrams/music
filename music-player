@@ -1,0 +1,2 @@
+#!/bin/bash
+exec mpv --no-video --no-terminal "$1"
