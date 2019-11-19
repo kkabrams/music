@@ -1,0 +1,12 @@
+#!/bin/bash
+data="$(id3v2 -R "$1")"
+#echo $data
+artist="$(printf "%s\n" "$data" | grep '^TPE1: ' | cut '-d ' -f2-)"
+title="$(printf "%s\n" "$data" | grep '^TIT2: ' | cut '-d ' -f2-)"
+album="$(printf "%s\n" "$data" | grep '^TALB: ' | cut '-d ' -f2-)"
+year="$(printf "%s\n" "$data" | grep '^TYER: ' | cut '-d ' -f2-)"
+if [ "$artist" -a "$title" -a "$album" -a "$year" ];then
+  printf '"%s" by %s on %s (%s)\n' "$title" "$artist" "$album" "$year"
+else
+  printf "%s\n" "$1"
+fi
