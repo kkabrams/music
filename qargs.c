@@ -57,7 +57,7 @@ int main(int argc,char *argv[]) {
     switch(pid=fork()) {
       case -1://fuck me
         perror("fork");
-        return 1;
+        return -1;
       case 0://we're the child
         fprintf(stderr,"running line %d in pid %d: %s %s\n",index,getpid(),argv[1],line[index]);
         if(getenv("QARGS_CHILD_PIDFILE")) {
@@ -84,7 +84,10 @@ int main(int argc,char *argv[]) {
     }
     fprintf(stderr,"child %d exited. going to %d the index.\n",pid,direction);
     index+=direction;
-    if(index < 0) index=0;
+    if(index < 0) {
+      fprintf(stderr,"tried to previous to before 0. exiting with code of 1.\n");
+      return 1;
+    }
     direction=DIR_NEXT;
   }
 }
