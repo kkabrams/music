@@ -14,3 +14,5 @@ install: qargs
 	install music-stop $(PREFIX)/bin/
 	install music-prev $(PREFIX)/bin/
 	install music-next $(PREFIX)/bin/
+	install music-nowplaying $(PREFIX)/bin/
+	install music-fileinfo $(PREFIX)/bin/
