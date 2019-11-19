@@ -1,2 +1,3 @@
 #!/bin/bash
+music-fileinfo "$1" > ${PREFIX}/var/cache/music-nowplaying.txt
 exec mpv --no-video --no-terminal "$1"
