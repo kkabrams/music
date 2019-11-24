@@ -16,3 +16,5 @@ install: qargs
 	install music-next $(PREFIX)/bin/
 	install music-nowplaying $(PREFIX)/bin/
 	install music-fileinfo $(PREFIX)/bin/
+	install music-playdir $(PREFIX)/bin/
+	install music-playlist $(PREFIX)/bin/

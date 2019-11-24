@@ -1,0 +1,2 @@
+#!/bin/sh
+find "$@" -name '*.mp3' | sort -n | music-playlist

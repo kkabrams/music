@@ -1,0 +1,6 @@
+#!/bin/sh
+mkdir -p "${PREFIX}/var/run"
+export "QARGS_CHILD_PIDFILE=${PREFIX}/var/run/music-player.pid"
+qargs music-player > "${PREFIX}/var/run/music-init.pid"
+rm ${PREFIX}/var/cache/music-nowplaying.txt
+logger -n logserver 'ran out of music to play'

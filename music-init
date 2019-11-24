@@ -1,4 +1,2 @@
 #!/bin/sh
-mkdir -p "${PREFIX}/var/run"
-export "QARGS_CHILD_PIDFILE=${PREFIX}/var/run/music-player.pid"
-find ~/Music -name '*.mp3' | shuf | qargs music-player > "${PREFIX}/var/run/music-init.pid"
+find ~/Music -name '*.mp3' | shuf | music-playlist
