@@ -1,3 +1,4 @@
 #!/bin/sh
 #exec pkill -STOP mpv
+logger -n logserver 'music paused'
 exec kill -STOP $(cat ${PREFIX}/var/run/music-player.pid)
