@@ -1,0 +1,8 @@
+#!/bin/sh
+id3v2 -R "$@" \
+  | egrep '^File|TRCK' \
+  | cut '-d ' -f2- \
+  | paste - - \
+  | tr '\t' ':' \
+  | sort -t: -n -k2 \
+  | cut -d: -f1
