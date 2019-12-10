@@ -32,12 +32,14 @@ void sig_handler(int sig) {
   }
 }
 
+//this is used for how far back you want to be able to go before you error out.
 #define LINES 1024
 
 int main(int argc,char *argv[]) {
   int status;
-  int index=0;
+  int index=0;//index of line, not index of buffer. actual buffer index is modulo LINES
   direction=1;
+  int start=0;//start of buffer after we max out the buffer.
   int lines_read=0;
   char line[LINES][PATH_MAX+1];//rather be off by one in the safe direction.
   FILE *fp;
@@ -47,11 +49,14 @@ int main(int argc,char *argv[]) {
     signal(SIGUSR1,sig_handler);
     signal(SIGUSR2,sig_handler);
     if(index == lines_read) {
-      if(fgets(line[index],sizeof(line[index])-1,stdin) == 0) {
+      if(fgets(line[index % LINES],sizeof(line[index % LINES])-1,stdin) == 0) {
         fprintf(stderr,"Reached EOF on stdin.\n");
         return 0;//EOF. this is normal.
       }
-      if(strchr(line[index],'\n')) *strchr(line[index],'\n')=0;
+      if(strchr(line[index % LINES],'\n')) *strchr(line[index % LINES],'\n')=0;
+      if(lines_read > LINES) {
+        start=lines_read % LINES;//start is 0 until we start looping
+      }
       lines_read++;
     }
     switch(pid=fork()) {
@@ -59,7 +64,7 @@ int main(int argc,char *argv[]) {
         perror("fork");
         return -1;
       case 0://we're the child
-        fprintf(stderr,"running line %d in pid %d: %s %s\n",index,getpid(),argv[1],line[index]);
+        fprintf(stderr,"running line %d in pid %d: %s %s\n",index,getpid(),argv[1],line[index % LINES]);
         if(getenv("QARGS_CHILD_PIDFILE")) {
           if((fp=fopen(getenv("QARGS_CHILD_PIDFILE"),"w+"))) {
             fprintf(fp,"%d\n",getpid());
@@ -72,7 +77,7 @@ int main(int argc,char *argv[]) {
         }
         signal(SIGUSR1,SIG_IGN);
         signal(SIGUSR2,SIG_IGN);
-        execlp(argv[1],argv[1],line[index],NULL);
+        execlp(argv[1],argv[1],line[index % LINES],NULL);
 	perror("execlp");
         return -2;//child failed to exec. tell it to fuck off.
         break;
@@ -84,10 +89,11 @@ int main(int argc,char *argv[]) {
     }
     fprintf(stderr,"child %d exited. going to %d the index.\n",pid,direction);
     index+=direction;
-    if(index < 0) {
-      fprintf(stderr,"tried to previous to before 0. exiting with code of 1.\n");
+    if(index < start) {
+      fprintf(stderr,"tried to previous to before start. exiting with code of 1.\n");
       return 1;
     }
+    if(index < 0) index+=LINES;
     direction=DIR_NEXT;
   }
 }
