@@ -1,0 +1,6 @@
+#!/bin/sh
+mpv "$1" --quiet \
+  | stdbuf -oL grep ' icy-title: ' \
+  | stdbuf -oL cut '-d ' -f3- \
+  | stdbuf -o0 tr '\n' '\0' \
+  | xargs -0 -n1 music-setnowplaying

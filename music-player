@@ -1,4 +1,3 @@
 #!/bin/bash
-music-fileinfo "$1" > ${PREFIX}/var/cache/music-nowplaying.txt
-logger -n logserver "$(music-fileinfo "$1")"
+music-setnowplaying "$(music-fileinfo "$1")"
 exec mpv --no-video --no-terminal "$1"

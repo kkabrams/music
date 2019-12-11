@@ -18,3 +18,5 @@ install: qargs
 	install music-fileinfo $(PREFIX)/bin/
 	install music-playdir $(PREFIX)/bin/
 	install music-playlist $(PREFIX)/bin/
+	install music-setnowplaying $(PREFIX)/bin/
+	install music-rebroadcast $(PREFIX)/bin/
