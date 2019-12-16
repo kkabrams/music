@@ -20,3 +20,6 @@ install: qargs
 	install music-playlist $(PREFIX)/bin/
 	install music-setnowplaying $(PREFIX)/bin/
 	install music-rebroadcast $(PREFIX)/bin/
+	install icy-metadata $(PREFIX)/bin/
+	install music-radio $(PREFIX)/bin/
+	install music-stream $(PREFIX)/bin/
