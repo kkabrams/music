@@ -1,0 +1,9 @@
+#!/bin/sh
+FILE="/dev/null"
+if [ -f "$PREFIX/var/run/music-player.pid" ];then
+  PID="$(cat $PREFIX/var/run/music-player.pid)"
+  if [ -d /proc/$PID ];then
+    FILE=$(cat /proc/$PID/cmdline | tr '\0' '\n' | tail -n1)
+  fi
+fi
+echo $FILE

@@ -1,7 +1,2 @@
 #!/bin/sh
-if [ "$1" ];then
-  FILE=$1
-else
-  FILE=$(cat /proc/$(cat $PREFIX/var/run/music-player.pid)/cmdline | tr '\0' '\n' | tail -n1)
-fi
-echo $FILE
+cat ${PREFIX}/var/cache/music-nowplaying.txt
