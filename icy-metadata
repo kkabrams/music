@@ -1,0 +1,8 @@
+#!/bin/bash
+while true;do
+  head -c 1024
+  NP="$(music-nowplaying 2>/dev/null)"
+  #LEN=$(printf "%64s" "${NP}" | wc -c | tr -cd '0-9')
+  #HEXLEN=$(printf "%02x\n" $[$LEN / 16 + 1])
+  printf "\x05StreamTitle='%64s'\n\n" "${NP}"
+done
