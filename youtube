@@ -1,0 +1,2 @@
+#!/bin/sh
+stdbuf -o0 youtube-dl --audio-format opus "$1" -o - | mpv --no-video -
