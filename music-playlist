@@ -1,7 +1,7 @@
 #!/bin/sh
 mkdir -p "${PREFIX}/var/run"
 music_init_pid="${PREFIX}/var/run/music-init.pid"
-if [ -f ${music_init_pid} ];then
+if [ -f "${music_init_pid}" ];then
   #pid file exists...
   if [ "$(ps -h -o cmd -p $(cat ${PREFIX}/var/run/music-init.pid ))" = "qargs music-player" ];then
     printf "already running.\n"
@@ -9,8 +9,8 @@ if [ -f ${music_init_pid} ];then
     echo cmd: "$(ps -h -o cmd -p $(cat ${PREFIX}/var/run/music-init.pid))"
     exit 1
   fi
-  printf "stale pid file"
-  rm $init_pid
+  printf "stale pid file: %s\n" "${music_init_pid}"
+  rm "${music_init_pid}"
 fi
 export "QARGS_CHILD_PIDFILE=${PREFIX}/var/run/music-player.pid"
 qargs music-player > $music_init_pid
