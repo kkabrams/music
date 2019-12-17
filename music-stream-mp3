@@ -1,6 +1,7 @@
 #!/bin/bash
 icy_metaint=1024
 while read -t 2 LINE;do
+  printf "%s\n" "$LINE" >&2
   printf "%s\n" "$LINE"
 done \
   | if grep -i "Icy-Metadata:" | cut -d: -f2- | grep 1 >/dev/null;then
@@ -14,5 +15,5 @@ else
   printf "HTTP/1.1 200 OK\r\n"
   printf "Content-Type: audio/ogg\r\n\r\n"
   stdbuf -o0 pacat --record -d alsa_output.pci-0000_00_07.0.analog-stereo.monitor --format=s16le \
-    | stdbuf -o0 oggenc - -r -C 2 -R 44100 -q 2
+    | stdbuf -o0 lame - -r
 fi
