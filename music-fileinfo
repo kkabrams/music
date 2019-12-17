@@ -8,5 +8,5 @@ year="$(printf "%s\n" "$data" | grep '^TYER: ' | cut '-d ' -f2-)"
 if [ "$artist" -a "$title" -a "$album" -a "$year" ];then
   printf '"%s" by %s on %s (%s)\n' "$title" "$artist" "$album" "$year"
 else
-  printf "%s\n" "$1"
+  printf "%s\n" "$1" | sed "s|$HOME/Music/||"
 fi
