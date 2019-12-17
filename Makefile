@@ -1,10 +1,18 @@
 PREFIX:=/usr/local
 
-.PHONY: install
+.PHONY: install clean
+
+all: qargs pad
 
 qargs: qargs.c
 
-install: qargs
+pad: pad.c
+
+clean:
+	rm qargs
+	rm pad
+
+install: all
 	install qargs $(PREFIX)/bin/
 	install music-player $(PREFIX)/bin/
 	install music-playpause $(PREFIX)/bin/
@@ -23,3 +31,5 @@ install: qargs
 	install icy-metadata $(PREFIX)/bin/
 	install music-radio $(PREFIX)/bin/
 	install music-stream $(PREFIX)/bin/
+	install music-stream-mp3 $(PREFIX)/bin/
+	install pad $(PREFIX)/bin/
