@@ -1,4 +1,5 @@
 #!/bin/bash
+logger -p info -n logserver "new listener!"
 icy_metaint=65536
 while read -t 2 LINE;do
   printf "%s\n" "$LINE"
@@ -16,3 +17,4 @@ else
   stdbuf -o0 pacat --record -d alsa_output.pci-0000_00_07.0.analog-stereo.monitor --format=s16le \
     | stdbuf -o0 oggenc - -r -C 2 -R 44100 -q 2
 fi
+logger -p info -n logserver "a listener dropped out. :("

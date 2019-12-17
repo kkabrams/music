@@ -1,4 +1,4 @@
 #!/bin/sh
 lsmod | grep snd_aloop > /dev/null || sudo modprobe snd_aloop
-logger -n logserver "RADIO IS NOW ON. http://$(domainname):8901/"
+logger -p info -n logserver "RADIO IS NOW ON. http://$(domainname):8901/"
 exec ncat -vklp 8901 -e music-stream

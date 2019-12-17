@@ -1,0 +1,8 @@
+#!/bin/sh
+echo artists: 666
+echo albums: 123
+echo songs: -5
+echo uptime: 1000 years
+echo db_playtime: 2 seconds
+echo db_update: 0
+echo playtime: 6

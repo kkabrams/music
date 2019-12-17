@@ -1,0 +1,12 @@
+#!/bin/sh
+echo 'Pos: 0'
+echo 'Id: 0'
+echo 'Prio: 0'
+#echo 'file: http://swagjukebox.tk/' #$(music-nowplaying)
+echo 'file:' "$(music-nowplaying)"
+echo 'time: 0'
+echo 'duration: 0'
+echo 'title: kek'
+echo 'song: derp'
+echo 'songid: 0'
+echo 'artist: kek'

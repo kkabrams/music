@@ -1,0 +1,7 @@
+#!/bin/sh
+echo volume: -1
+echo state: $(./status-state)
+echo repeat: 0
+echo random: 1
+echo single: 0
+echo consume: 0

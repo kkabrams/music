@@ -15,4 +15,4 @@ fi
 export "QARGS_CHILD_PIDFILE=${PREFIX}/var/run/music-player.pid"
 qargs music-player > $music_init_pid
 rm ${PREFIX}/var/cache/music-nowplaying.txt
-logger -n logserver 'ran out of music to play'
+logger -p notice -n logserver 'ran out of music to play'

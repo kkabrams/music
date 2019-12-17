@@ -1,3 +1,3 @@
 #!/bin/sh
-logger -n logserver "music prev'd"
+logger -p info -n logserver "music prev'd"
 exec kill -USR1 "$(cat ${PREFIX}/var/run/music-init.pid)"
