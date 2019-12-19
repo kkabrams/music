@@ -1,0 +1,2 @@
+#!/bin/sh
+ss -pantu state established '( sport = 8901 )'
