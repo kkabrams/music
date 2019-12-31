@@ -1,0 +1,13 @@
+#!/bin/sh
+wid="$(xwininfo | grep ^xwin | tail -n1 | cut '-d ' -f4)"
+if [ ! "$wid" ];then
+  exit 1
+fi
+while xdotool getwindowname "$wid";do
+  sleep 1
+done \
+  | stdbuf -oL sed 's/[ -]*Mozilla Firefox$//g' \
+  | stdbuf -oL grep '..' \
+  | stdbuf -oL uniq \
+  | stdbuf -o0 tr '\n' '\0' \
+  | xargs -n1 -0 music-setnowplaying

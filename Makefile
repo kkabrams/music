@@ -34,3 +34,5 @@ install: all
 	install music-stream-mp3 $(PREFIX)/bin/
 	install pad $(PREFIX)/bin/
 	install music-listeners $(PREFIX)/bin/
+	install music-getplaying $(PREFIX)/bin/
+	install music-setnowplaying-xwintitle $(PREFIX)/bin/
