@@ -1,4 +1,5 @@
 #!/bin/sh
 #exec pkill -CONT mpv
 logger -p info -n logserver 'music unpaused'
+music-setnowplaying "$(music-fileinfo "$(music-getplaying)")"
 exec kill -CONT $(cat ${PREFIX}/var/run/music-player.pid)
