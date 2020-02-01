@@ -1,2 +1,2 @@
 #!/bin/sh
-find ~/Music | egrep -i '\.mp3$|\.flac$' | shuf | music-playlist
+find -H ~/Music | egrep -i '\.mp3$|\.flac$' | shuf | music-playlist
