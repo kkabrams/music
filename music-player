@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o pipefail
 if printf "%s\n" "$1" | urimatch -D youtube.com >/dev/null;then
   music-setnowplaying "$(urititle "$1")" & #toss this in background so it won't hold up the song playing.
   exec youtube "$1"
