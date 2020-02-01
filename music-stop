@@ -1,5 +1,11 @@
 #!/bin/sh
-kill -9 $(cat ${PREFIX}/var/run/music-init.pid)
-rm -f ${PREFIX}/var/run/music-init.pid
-kill -9 $(cat ${PREFIX}/var/run/music-player.pid)
-rm -f ${PREFIX}/var/run/music-player.pid
+if [ -f ${PREFIX}/var/run/music-init.pid ];then
+  kill -9 $(cat ${PREFIX}/var/run/music-init.pid)
+  rm -f ${PREFIX}/var/run/music-init.pid
+fi
+
+if [ -f ${PREFIX}/var/run/music-player.pid ];then
+  kill -9 $(cat ${PREFIX}/var/run/music-player.pid)
+  rm -f ${PREFIX}/var/run/music-player.pid
+fi
+rm -f ${PREFIX}/var/cache/music-nowplaying.txt
