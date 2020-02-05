@@ -1,0 +1,7 @@
+#!/bin/sh
+file="$(find -H ~/Music | egrep -i '\.mp3$|\.flac$' | dmenu)"
+if [ "$file" ];then
+  music-stop
+  printf "%s\n" "$file" | music-playlist
+  music-init
+fi
