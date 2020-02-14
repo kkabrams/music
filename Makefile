@@ -2,7 +2,7 @@ PREFIX:=/usr/local
 
 .PHONY: install clean
 
-all: qargs pad
+all: qargs pad icy-metadata
 
 qargs: qargs.c
 
@@ -11,6 +11,8 @@ pad: pad.c
 clean:
 	rm qargs
 	rm pad
+
+icy-metadata: icy-metadata.c
 
 install: all
 	install qargs $(PREFIX)/bin/
@@ -36,3 +38,6 @@ install: all
 	install music-listeners $(PREFIX)/bin/
 	install music-getplaying $(PREFIX)/bin/
 	install music-setnowplaying-xwintitle $(PREFIX)/bin/
+	install youtube $(PREFIX)/bin/
+	install music-search $(PREFIX)/bin/
+	install music-albumart $(PREFIX)/bin/

@@ -1,0 +1,2 @@
+#!/bin/sh
+music-getplaying | rev | cut -d/ -f2- | rev | tr '\n' '\0' | xargs -0 find | grep -i jpg | head -n1 | tr '\n' '\0' | xargs -0 img2sixel -w 128 -h 128 -e
