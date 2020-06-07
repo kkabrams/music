@@ -1,4 +1,5 @@
 #define _POSIX_C_SOURCE 1
+#include <fcntl.h>
 #include <limits.h>
 #include <stdio.h>
 #include <signal.h>
@@ -26,6 +27,19 @@ void sig_handler(int sig) {
       else fprintf(stderr,"shit. pid is %d\n",pid);
       direction=DIR_NEXT;
       break;
+    case SIGHUP:
+      if(fseek(stdin,0,SEEK_END) == -1) {
+        int oldfl;
+        oldfl=fcntl(fileno(stdin),F_GETFL);
+        if(oldfl == -1) {
+          fprintf(stderr,"F_GETFL failed for some derpy reason.\n");
+          break;
+        }
+        fcntl(fileno(stdin),F_SETFL,O_NONBLOCK);
+        while(fgetc(stdin) != -1);//this only works if non-blocking? :/
+        fcntl(fileno(stdin),F_SETFL,oldfl);
+        clearerr(stdin);
+      }
     default:
       //should NOT happen.
       break;
@@ -48,6 +62,7 @@ int main(int argc,char *argv[]) {
   while(1) {//I should come up with a better condition for the main loop
     signal(SIGUSR1,sig_handler);
     signal(SIGUSR2,sig_handler);
+    signal(SIGHUP,sig_handler);
     if(index == lines_read) {
       if(fgets(line[index % LINES],sizeof(line[index % LINES])-1,stdin) == 0) {
         fprintf(stderr,"Reached EOF on stdin.\n");
