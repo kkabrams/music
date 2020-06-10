@@ -5,4 +5,5 @@ if printf "%s\n" "$1" | urimatch -D youtube.com >/dev/null;then
   exec youtube "$1"
 fi
 music-setnowplaying "$(music-fileinfo "$1")"
+#printf "now playing: %s\n" "$(music-nowplaying | head -n1)" | festival --tts -b
 exec mpv --no-video --no-terminal "$1"
