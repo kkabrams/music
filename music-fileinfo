@@ -17,5 +17,5 @@ fi
 if [ "$artist" -a "$title" -a "$album" -a "$year" ];then
   printf '"%s" by %s on %s (%s)\n' "$title" "$artist" "$album" "$year"
 else
-  printf "%s\n" "$ext" "$1" | sed "s|$HOME/Music/||"
+  printf "%s\n" "$1" | sed "s|$HOME/Music/||"
 fi
