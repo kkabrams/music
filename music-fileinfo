@@ -1,12 +1,21 @@
 #!/bin/bash
-data="$(id3v2 -R "$1")"
-#echo $data
-artist="$(printf "%s\n" "$data" | grep '^TPE1: ' | cut '-d ' -f2-)"
-title="$(printf "%s\n" "$data" | grep '^TIT2: ' | cut '-d ' -f2-)"
-album="$(printf "%s\n" "$data" | grep '^TALB: ' | cut '-d ' -f2-)"
-year="$(printf "%s\n" "$data" | grep '^TYER: ' | cut '-d ' -f2-)"
+ext="$(printf "$1" | rev | cut -d. -f1 | rev)"
+if [ "$ext" = "mp3" ];then
+  data="$(id3v2 -R "$1")"
+  #echo $data
+  artist="$(printf "%s\n" "$data" | grep '^TPE1: ' | cut '-d ' -f2-)"
+  title="$(printf "%s\n" "$data" | grep '^TIT2: ' | cut '-d ' -f2-)"
+  album="$(printf "%s\n" "$data" | grep '^TALB: ' | cut '-d ' -f2-)"
+  year="$(printf "%s\n" "$data" | grep '^TYER: ' | cut '-d ' -f2-)"
+fi
+if [ "$ext" = "flac" ];then
+  artist="$(metaflac --show-tag=artist "$1" | cut -d= -f2-)"
+  title="$(metaflac --show-tag=title "$1" | cut -d= -f2-)"
+  album="$(metaflac --show-tag=album "$1" | cut -d= -f2-)"
+  year="$(metaflac --show-tag=date "$1" | cut -d= -f2-)"
+fi
 if [ "$artist" -a "$title" -a "$album" -a "$year" ];then
   printf '"%s" by %s on %s (%s)\n' "$title" "$artist" "$album" "$year"
 else
-  printf "%s\n" "$1" | sed "s|$HOME/Music/||"
+  printf "%s\n" "$ext" "$1" | sed "s|$HOME/Music/||"
 fi
