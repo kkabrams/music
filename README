@@ -1,0 +1,11 @@
+bunch of scripts I use as my music player interface.
+
+depends on...
+
+metaflac program which is in the debian package "flac"
+
+there's a light dep on uritools (one of my repos)
+but you can rip that out if you want.
+it is used for youtube link support.
+
+You'll need a C compiler ofc.
