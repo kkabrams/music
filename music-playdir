@@ -1,2 +1,2 @@
 #!/bin/sh
-find "$@" | egrep -i '\.mp3$|\.flac$' | sort -n | music-playlist
+find "$@" | egrep -i '\.m4a$|\.mp3$|\.flac|\.ogg$' | sort -n | music-playlist
