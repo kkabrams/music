@@ -1,3 +1,17 @@
 #!/bin/bash
 set -o pipefail
-while true;do find -H ~/Music/ | egrep -i '\.m4a$|\.mp3$|\.flac$' | shuf;done | music-playlist
+music_init_pid="${PREFIX}/run/music/init.pid"
+while [ -f $music_init_pid ];do 
+  if [ -f "${music_init_pid}" ];then
+    #pid file exists...
+    if [ "$(ps -h -o cmd -p $(cat ${PREFIX}/run/music/init.pid ))" = "qargs music-player" ];then
+      printf "already running.\n"
+      echo pid: "$(cat ${PREFIX}/run/music/init.pid)"
+      echo cmd: "$(ps -h -o cmd -p $(cat ${PREFIX}/var/run/music/init.pid))"
+      exit 1
+    fi
+    printf "stale pid file: %s\n" "${music_init_pid}"
+    rm "${music_init_pid}"
+  fi
+  find -H ~/Music/ | egrep -i '\.m4a$|\.mp3$|\.flac|\.ogg$' | shuf
+done | music-playlist
