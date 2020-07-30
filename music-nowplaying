@@ -1,2 +1,6 @@
 #!/bin/sh
-cat ${PREFIX}/var/cache/music-nowplaying.txt
+if [ "$want_six" ];then
+  cat ${PREFIX}/var/cache/music/nowplaying.txt 2>/dev/null || echo 'off the air'
+else
+  head -n1 ${PREFIX}/var/cache/music/nowplaying.txt 2>/dev/null || echo 'off the air'
+fi
