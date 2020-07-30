@@ -1,3 +1,6 @@
 #!/bin/sh
-logger -p info -n logserver "music next'd"
-exec kill -USR2 "$(cat ${PREFIX}/var/run/music-init.pid)"
+if [ -f "${PREFIX}/run/music/init.pid" ];then
+  logger -p info -n logserver "music next'd"
+  exec kill -USR2 "$(cat ${PREFIX}/run/music/init.pid)"
+fi
+logger -p info -n logserver "FAILED TO NEXT. PID FILE MISSING."
