@@ -1,18 +1,17 @@
 #!/bin/sh
-mkdir -p "${PREFIX}/var/run"
-music_init_pid="${PREFIX}/var/run/music-init.pid"
+mkdir -p "${PREFIX}/run/music"
+music_init_pid="${PREFIX}/run/music/init.pid"
 if [ -f "${music_init_pid}" ];then
-  #pid file exists...
-  if [ "$(ps -h -o cmd -p $(cat ${PREFIX}/var/run/music-init.pid ))" = "qargs music-player" ];then
+  if [ "$(ps -h -o cmd -p "$(cat "${music_init_pid}")")" = "qargs music-player" ];then
     printf "already running.\n"
-    echo pid: "$(cat ${PREFIX}/var/run/music-init.pid)"
-    echo cmd: "$(ps -h -o cmd -p $(cat ${PREFIX}/var/run/music-init.pid))"
+    echo pid: "$(cat "${PREFIX}/run/music/init.pid")"
+    echo cmd: "$(ps -h -o cmd -p $(cat ${PREFIX}/run/music/init.pid))"
     exit 1
+  else
+    logger -p notice -n logserver 'stale music init pid most likely.'
   fi
-  printf "stale pid file: %s\n" "${music_init_pid}"
-  rm "${music_init_pid}"
 fi
-export "QARGS_CHILD_PIDFILE=${PREFIX}/var/run/music-player.pid"
+export "QARGS_CHILD_PIDFILE=${PREFIX}/run/music/player.pid"
 qargs music-player > $music_init_pid
-rm ${PREFIX}/var/cache/music-nowplaying.txt
+rm ${PREFIX}/var/cache/music/nowplaying.txt
 logger -p notice -n logserver 'ran out of music to play'
