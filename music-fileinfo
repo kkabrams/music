@@ -14,6 +14,12 @@ if [ "$ext" = "flac" ];then
   album="$(metaflac --show-tag=album "$1" | cut -d= -f2-)"
   year="$(metaflac --show-tag=date "$1" | cut -d= -f2-)"
 fi
+if [ "$ext" = "ogg" ];then
+  artist="$(vorbiscomment "$1" | grep "^ARTIST=" | cut -d= -f2-)"
+  title="$(vorbiscomment "$1" | grep "^TITLE=" | cut -d= -f2-)"
+  album="$(vorbiscomment "$1" | grep "^ALBUM=" | cut -d= -f2-)"
+  year="$(vorbiscomment "$1" | grep "^DATE=" | cut -d= -f2-)"
+fi
 if [ "$artist" -a "$title" -a "$album" -a "$year" ];then
   printf '"%s" by %s on %s (%s)\n' "$title" "$artist" "$album" "$year"
 else

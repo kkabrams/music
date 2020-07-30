@@ -1,2 +1,3 @@
-#!/bin/sh
+#!/bin/bash
+set -o pipefail
 while true;do find -H ~/Music/ | egrep -i '\.m4a$|\.mp3$|\.flac$' | shuf;done | music-playlist
