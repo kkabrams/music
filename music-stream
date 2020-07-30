@@ -3,9 +3,19 @@ set -eo pipefail
 logger -p info -n logserver "new listener! ${NCAT_REMOTE_ADDR}:${NCAT_REMOTE_PORT}"
 icy_metaint=16384
 while read -t 2 LINE;do
-  printf "%s\n" "$LINE"
-done \
-  | if stdbuf -oL grep -i "Icy-Metadata:" | stdbuf -oL cut -d: -f2- | stdbuf -oL grep 1 >/dev/null;then
+#  printf "%s\n" "$LINE"
+  if printf "%s\n" "$LINE" | grep -i "^Icy-Metadata: " | cut -d: -f2- | grep 1 >/dev/null;then
+    export want_icy=1
+  fi
+  if printf "%s\n" "$LINE" | grep -i "^Sixel-Albumart: " | cut -d: -f2- | grep 1 >/dev/null;then
+    export want_six=1
+  fi
+  if [ "$LINE" = $'\r' ];then
+    break
+  fi
+done
+
+if [ "$want_icy" = "1" ];then
   printf "HTTP/1.1 200 OK\r\n"
   printf "icy-metaint: %s\r\n" "${icy_metaint}"
   printf "Content-Type: audio/ogg\r\n\r\n"
