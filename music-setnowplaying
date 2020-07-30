@@ -1,4 +1,4 @@
 #!/bin/bash
 logger -p notice -n logserver "$*"
-printf "%s\n" "$*" | tr -s ' ' > ${PREFIX}/var/cache/music-nowplaying.txt
-music-albumart >> ${PREFIX}/var/cache/music-nowplaying.txt
+printf "%s\n" "$*" | tr -s ' ' > ${PREFIX}/var/cache/music/nowplaying.txt
+music-albumart >> ${PREFIX}/var/cache/music/nowplaying.txt
