@@ -1,11 +1,18 @@
 #!/bin/sh
-if [ -f ${PREFIX}/var/run/music-init.pid ];then
-  kill -9 $(cat ${PREFIX}/var/run/music-init.pid)
-  rm -f ${PREFIX}/var/run/music-init.pid
+logger -n logserver "attempting to stop the music."
+rm -f ${PREFIX}/var/cache/music/nowplaying.txt
+file="${PREFIX}/run/music/init.pid"
+if [ -f "$file" ];then
+  pid="$(cat "$file")"
+  rm -f "$file"
+  kill -9 "$pid"
+  file="${PREFIX}/run/music/player.pid"
+  if [ -f "$file" ];then
+    pid="$(cat "$file")"
+    rm -f "$file"
+    kill -9 "$pid"
+    exit 0
+  fi
+  logger -n logserver "player.pid was missing."
 fi
-
-if [ -f ${PREFIX}/var/run/music-player.pid ];then
-  kill -9 $(cat ${PREFIX}/var/run/music-player.pid)
-  rm -f ${PREFIX}/var/run/music-player.pid
-fi
-rm -f ${PREFIX}/var/cache/music-nowplaying.txt
+logger -n logserver "init.pid was missing."
