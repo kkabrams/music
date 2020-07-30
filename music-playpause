@@ -1,13 +1,16 @@
 #!/bin/bash
-pid="$(cat "${PREFIX}/var/run/music-player.pid")"
-state="$(ps -o state= -p "$pid")"
-if [ "$state" ];then
-  if [ "$state" = "T" ];then #it is stopped. let's send it a CONT
-    exec music-unpause
+if [ -f "${PREFIX}/run/music/player.pid" ];then
+  pid="$(cat "${PREFIX}/run/music/player.pid")"
+  state="$(ps -o state= -p "$pid")"
+  if [ "$state" ];then
+    if [ "$state" = "T" ];then #it is stopped. let's send it a CONT
+      exec music-unpause
+    fi
+    if [ "$state" = "S" ];then #it is running, let's pause it.
+      exec music-pause
+    fi
   fi
-  if [ "$state" = "S" ];then #it is running, let's pause it.
-    exec music-pause
-  fi
+  music-setnowplaying "playpause: stale PID file"
 else
   nohup music-init &
   disown
