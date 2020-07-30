@@ -7,4 +7,4 @@ if printf "%s\n" "$FILE" | urimatch -D youtube.com >/dev/null;then
 else
   music-setnowplaying "$(music-fileinfo "$FILE")"
 fi
-exec kill -CONT $(cat ${PREFIX}/var/run/music-player.pid)
+exec kill -CONT $(cat ${PREFIX}/run/music/player.pid)
