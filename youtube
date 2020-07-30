@@ -1,2 +1,4 @@
-#!/bin/sh
-stdbuf -o0 youtube-dl --audio-format opus "$1" -o - | mpv --no-video -
+#!/bin/bash
+set -eo pipefail
+# mpv uses youtube-dl anyway
+exec mpv --no-video --no-terminal "$1"
