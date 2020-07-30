@@ -1,7 +1,7 @@
-#!/bin/sh
-file="$(find -H ~/Music | egrep -i '\.mp3$|\.flac$' | dmenu)"
+#!/bin/bash
+file="$(cat <(find -H /home/epoch/Music/ -type d) <(find -H /home/epoch/Music | egrep -i '\.m4a$|\.mp3$|\.flac$') | cut -d/ -f5- | dmenu -p music\> )"
 if [ "$file" ];then
   music-stop
-  printf "%s\n" "$file" | music-playlist
+  music-playdir "/home/epoch/Music/$file"
   music-init
 fi
