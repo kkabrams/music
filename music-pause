@@ -1,4 +1,6 @@
 #!/bin/sh
-#exec pkill -STOP mpv
-logger -p info -n logserver 'music paused'
-exec kill -STOP $(cat ${PREFIX}/var/run/music-player.pid)
+if [ -f "${PREFIX}/run/music/player.pid" ];then
+  logger -p info -n logserver 'music paused'
+  exec kill -STOP "$(cat "${PREFIX}/run/music/player.pid")"
+fi
+logger -p info -n logserver 'MUSIC FAILED TO PAUSE. PID FILE MISSING.'
