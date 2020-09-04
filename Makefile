@@ -15,6 +15,7 @@ clean:
 icy-metadata: icy-metadata.c
 
 install: all
+	install id3sort	$(PREFIX)/bin/
 	install qargs $(PREFIX)/bin/
 	install music-player $(PREFIX)/bin/
 	install music-playpause $(PREFIX)/bin/
