@@ -39,11 +39,11 @@
 ### then dedup the lines that were caused by both id3v1 and id3v2 existing in one file.
 
 id3v2 -l "$@" \
-  | egrep '^id3v[12] tag info for |^Comment:|^/|^TRCK' \
+  | egrep '^id3v[12] tag info for |^Comment:|^TRCK' \
   | sed 's/id3v[12] tag info for \(.*\):$/\1/g' \
   | sed 's/^.* Track: 0*\([0-9]*\)$/\1/g' \
-  | sed 's/^TRCK[^:]*: 0*\([0-9]*\)/\1/g' \
-  | paste - - \
-  | uniq \
-  | sort -t$'\t' -n -k2 \
-  | cut -f1
+  | sed 's/^TRCK[^:]*: 0*\([0-9]*\)$/\1/g' \
+#  | paste - -
+#  | uniq \
+#  | sort -t$'\t' -n -k2 \
+#  | cut -f1
