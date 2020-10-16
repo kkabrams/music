@@ -1,10 +1,49 @@
 #!/bin/bash
 ### this is done this way so it works with both v1 and v2
+
+### the first half needs to setup tab separated data
+### tracknumber [tab] filename
+
+### example id3v2 output
+
+# id3v1 tag info for Damaged I.mp3:
+# Title  : Damaged I                       Artist: Black Flag
+# Album  : Damaged                         Year: 1990, Genre: Other (12)
+# Comment: No Description AvailableNo T    Track: 15
+# id3v2 tag info for Damaged I.mp3:
+# TPE2 (Band/orchestra/accompaniment): Black Flag
+# TIT2 (Title/songname/content description): Damaged I
+# TALB (Album/Movie/Show title): Damaged
+# TYER (Year): 1990
+# TRCK (Track number/Position in set): 15
+# [...]
+
+# id3v2 tag info for 2011 - The Devil's Rain/01. The Devil's Rain.mp3:
+# TIT2 (Title/songname/content description): The Devil's Rain
+# TALB (Album/Movie/Show title): The Devil's Rain
+# TPE1 (Lead performer(s)/Soloist(s)): Misfits
+# TCON (Content type): Punk (43)
+# TRCK (Track number/Position in set): 01
+# TYER (Year): 2011
+# 2011 - The Devil's Rain/01. The Devil's Rain.mp3: No ID3v1 tag
+
+### this file doesn't output anything except an error containing the filename for id3v2 -R
+# id3v1 tag info for 25 Good Guys (Don't Wear White).mp3:
+# Title  : Good Guys (Don't Wear White)    Artist: Minor Threat
+# Album  : Complete Discography            Year:     , Genre: Alternative (20)
+# Comment:                                 Track: 25
+# 25 Good Guys (Don't Wear White).mp3: No ID3v2 tag
+
+### so. the plan is to get the double-output for if both tags exist.
+### then normalize them to not have leading 0s
+### then dedup the lines that were caused by both id3v1 and id3v2 existing in one file.
+
 id3v2 -l "$@" \
-  | egrep '^id3v2 tag info for |^Comment:|^/' \
-  | sed 's/^.* Track: //g' \
-  | sed 's|id3v2 tag info for \(.*\):$|\1|g' \
-  | sed 's/: No ID3v2 tag$//g' \
+  | egrep '^id3v[12] tag info for |^Comment:|^/|^TRCK' \
+  | sed 's/id3v[12] tag info for \(.*\):$/\1/g' \
+  | sed 's/^.* Track: 0*\([0-9]*\)$/\1/g' \
+  | sed 's/^TRCK[^:]*: 0*\([0-9]*\)/\1/g' \
   | paste - - \
-  | sort -t$'\t' -n -k1 \
-  | cut -f2
+  | uniq \
+  | sort -t$'\t' -n -k2 \
+  | cut -f1
