@@ -1,5 +1,7 @@
 #!/bin/bash
+export SHOW_VIDEO=--no-video
 file="$(cat <(find -H /home/epoch/Music/ -type d) <(find -H /home/epoch/Music | egrep -i '\.m4a$|\.mp3$|\.flac$') | cut -d/ -f5- | dmenu -p music\> )"
+logger -n logserver "music-search'd for: $file"
 if [ "$file" ];then
   music-stop
   music-playdir "/home/epoch/Music/$file"
