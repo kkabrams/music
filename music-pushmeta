@@ -1,0 +1,22 @@
+#!/bin/bash
+env > ~/FUCK2
+uri="$(cat ${PREFIX}/run/music/pushuri)"
+if [ ! "$uri" ];then
+  printf "not pushing audio. no where to send it to.\n" >&2
+  exit 1
+fi
+which uricut && domain="$(printf "%s\n" "$uri" | uricut -d)" || domain=radio.tildeverse.org
+which uricut && port="$(printf "%s\n" "$uri" | uricut -P)"   || port=8005
+which uricut && user="$(printf "%s\n" "$uri" | uricut -u)"   || user=default-username
+which uricut && pass="$(printf "%s\n" "$uri" | uricut -k)"   || pass=default-password
+creds="${user}:${pass}"
+host="${domain}:${port}"
+if ! lsof "-i@${host}";then
+  printf "not pushing audio to %s, so not sending metadata.\n" "${uri}" >&2
+  exit 2
+fi
+printf "GET /admin/metadata?mode=updinfo&mount=/&title=%s HTTP/1.1\r
+Host: %s\r
+Authorization: Basic %s\r
+\r
+" "$(uriescape "$1" | sed 's/\&/%26/g')" "${host}" "$(printf "%s\n" "$creds" | base64)" | ncat "${domain}" "${port}"

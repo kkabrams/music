@@ -1,0 +1,37 @@
+#!/bin/bash
+
+### this is the default because this is the server I push to sometimes.
+uri="${1:-http://radio.tildeverse.org:8005/}"
+
+### if you don't have these tools installed, you'll want to edit these assignments manually
+which secret-tool >/dev/null && creds="$(secret-tool lookup "${uri}" "${uri}")" || creds="default-username:default-password"
+which uricut >/dev/null && domain="$(printf "%s\n" "$uri" | uricut -d)" || domain="radio.tildeverse.org"
+which uricut >/dev/null && port="$(printf "%s\n" "$uri" | uricut -P)"   || port="8005"
+
+user="$(printf "%s\n" "$creds" | cut -d: -f1)"
+pass="$(printf "%s\n" "$creds" | cut -d: -f2)"
+
+### not as portable. :/ but this is what I used first.
+##( printf "username: %s\npassword: %s\n" "$user" "$pass" ; printf "%s\n" "${uri}" | uricut ) | urijoin > "${PREFIX}/run/music/pushuri"
+
+printf "http://%s:%s@%s:%s/\n" "$user" "$pass" "$domain" "$port" > "${PREFIX}/run/music/pushuri"
+
+host="$domain:$port"
+
+### while this is going, I need to find a way to add a hook to the music-setnowplaying
+(sleep 2;music-updateplaying )&
+
+stdbuf -o0 pacat --record -d alsa_output.default.monitor --format=s16le \
+  | stdbuf -o0 lame - -r -s 44.1 -b 128 \
+  | cat <(printf \
+"SOURCE / HTTP/1.1\r
+Host: %s\r
+Content-Type: audio/mpeg\r
+Authorization: Basic %s\r
+Ice-Public: 0\r
+Ice-Name: mic check\r
+Ice-Description: epoch is testing stuff\r
+Ice-URL: file:///dev/null\r
+Ice-Genre: wat\r
+\r
+" "$host" "$(printf "%s\n" "$creds" | base64)") /dev/stdin | ncat "${domain}" "${port}"

@@ -1,0 +1,7 @@
+#!/bin/sh
+FILE="$(music-getplaying)"
+if printf "%s\n" "$FILE" | urimatch -D youtube.com >/dev/null;then
+  music-setnowplaying "$(urititle "$FILE")" &
+else
+  music-setnowplaying "$(music-fileinfo "$FILE")"
+fi
