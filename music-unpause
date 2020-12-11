@@ -1,10 +1,5 @@
 #!/bin/sh
 #exec pkill -CONT mpv
 logger -p info -n logserver 'music unpaused'
-FILE="$(music-getplaying)"
-if printf "%s\n" "$FILE" | urimatch -D youtube.com >/dev/null;then
-  music-setnowplaying "$(urititle "$FILE")" &
-else
-  music-setnowplaying "$(music-fileinfo "$FILE")"
-fi
+music-updateplaying
 exec kill -CONT $(cat ${PREFIX}/run/music/player.pid)
