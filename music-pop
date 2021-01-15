@@ -1,0 +1,17 @@
+#!/bin/sh
+uri="$(cat ${PREFIX}/run/music/pushuri)"
+if [ ! "$uri" ];then
+  printf "not pushing audio. no where to send it to.\n" >&2
+  exit 1
+fi
+which uricut && domain="$(printf "%s\n" "$uri" | uricut -d)" || domain=radio.tildeverse.org
+which uricut && port="$(printf "%s\n" "$uri" | uricut -P)"   || port=8005
+which uricut && user="$(printf "%s\n" "$uri" | uricut -u)"   || user=default-username
+which uricut && pass="$(printf "%s\n" "$uri" | uricut -k)"   || pass=default-password
+creds="${user}:${pass}"
+host="${domain}:${port}"
+pid="$(lsof -F p "-i@${host}" | grep ^p | cut -dp -f2)"
+if [ "$pid" ];then
+  pkill -P $pid
+  kill $pid
+fi

@@ -1,0 +1,5 @@
+#!/bin/bash
+### this is also the config file for this.
+RECORD_DEVICE=alsa_output.pci-0000_00_07.0.analog-stereo.monitor
+set -eo pipefail
+exec stdbuf -o0 pacat --record -d "$RECORD_DEVICE" --format=s16le
