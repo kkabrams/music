@@ -5,12 +5,19 @@ file="${PREFIX}/run/music/init.pid"
 if [ -f "$file" ];then
   pid="$(cat "$file")"
   rm -f "$file"
-  kill -9 "$pid"
+  if [ "$(ps -h -o cmd -p "$pid")" = "qargs music-player" ];then
+    printf "found qargs music-player running with pid %d. killing.\n" "$pid" >&2
+    pkill -2 -P "$pid"
+    kill -2 "$pid"
+  else
+    printf "stale init.pid\n" >&2
+  fi
   file="${PREFIX}/run/music/player.pid"
   if [ -f "$file" ];then
     pid="$(cat "$file")"
     rm -f "$file"
-    kill -9 "$pid"
+    pkill -2 -P "$pid"
+    kill -2 "$pid"
     exit 0
   fi
   logger -n logserver "player.pid was missing."
