@@ -1,9 +1,12 @@
 #!/bin/bash
 set -o pipefail
-if printf "%s\n" "$1" | urimatch -D youtube.com >/dev/null;then
+if printf "%s\n" "$1" | urimatch -D youtube.com -D youtu.be >/dev/null;then #urimatch is "or" matching by default.
   music-setnowplaying "$(urititle "$1")" & #toss this in background so it won't hold up the song playing.
   exec youtube "$1"
 fi
-music-setnowplaying "$(music-fileinfo "$1")"
+if printf '%s\n' "$1" | urimatch -s http -s https >/dev/null;then
+  exec music-rebroadcast "$1"
+fi
+music-setnowplaying "$(music-fileinfo "$1")" &
 #printf "now playing: %s\n" "$(music-nowplaying | head -n1)" | festival --tts -b
-exec mpv --no-video --no-terminal "$1"
+exec mpv $SHOW_VIDEO --no-terminal "$1" #what was the point of $SHOW_VIDEO? exec youtube up there should show videos...
