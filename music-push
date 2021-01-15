@@ -5,6 +5,14 @@ uri="${1:-http://radio.tildeverse.org:8005/}"
 
 ### if you don't have these tools installed, you'll want to edit these assignments manually
 which secret-tool >/dev/null && creds="$(secret-tool lookup "${uri}" "${uri}")" || creds="default-username:default-password"
+
+if [ "$creds" = default-username:default-password ];then
+  echo "URI: $uri"
+  printf "not going to continue with default creds. fix ur secrets.\n" >&2
+  exit 1
+fi
+
+which secret-lock >/dev/null && secret-lock
 which uricut >/dev/null && domain="$(printf "%s\n" "$uri" | uricut -d)" || domain="radio.tildeverse.org"
 which uricut >/dev/null && port="$(printf "%s\n" "$uri" | uricut -P)"   || port="8005"
 
@@ -19,9 +27,9 @@ printf "http://%s:%s@%s:%s/\n" "$user" "$pass" "$domain" "$port" > "${PREFIX}/ru
 host="$domain:$port"
 
 ### while this is going, I need to find a way to add a hook to the music-setnowplaying
-(sleep 2;music-updateplaying )&
+(sleep 10;music-updateplaying )&
 
-stdbuf -o0 pacat --record -d alsa_output.default.monitor --format=s16le \
+music-record \
   | stdbuf -o0 lame - -r -s 44.1 -b 128 \
   | cat <(printf \
 "SOURCE / HTTP/1.1\r
