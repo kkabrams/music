@@ -11,19 +11,30 @@
 int pid;//THE child process
 int direction;
 
+#define STOP_WITH SIGTERM
+
 #define DIR_NEXT 1
+#define DIR_STOP 0
 #define DIR_PREV -1
+
+char exit_please=0;
 
 void sig_handler(int sig) {
   fprintf(stderr,"got a signal. %d\n",sig);
   switch(sig) {
+    case SIGTERM:
+      if(pid > 0) kill(pid,STOP_WITH);
+      else fprintf(stderr,"shit. pid is %d\n",pid);
+      direction=DIR_STOP;
+      exit_please=1;
+      break;
     case SIGUSR1:
-      if(pid > 0) kill(pid,9);
+      if(pid > 0) kill(pid,STOP_WITH);
       else fprintf(stderr,"shit. pid is %d\n",pid);
       direction=DIR_PREV;
       break;
     case SIGUSR2:
-      if(pid > 0) kill(pid,9);
+      if(pid > 0) kill(pid,STOP_WITH);
       else fprintf(stderr,"shit. pid is %d\n",pid);
       direction=DIR_NEXT;
       break;
@@ -59,10 +70,11 @@ int main(int argc,char *argv[]) {
   FILE *fp;
   printf("%d\n",getpid());
   fflush(stdout);
-  while(1) {//I should come up with a better condition for the main loop
+  while(!exit_please) {//I should come up with a better condition for the main loop
     signal(SIGUSR1,sig_handler);
     signal(SIGUSR2,sig_handler);
     signal(SIGHUP,sig_handler);
+    signal(SIGTERM,sig_handler);
     if(index == lines_read) {
       if(fgets(line[index % LINES],sizeof(line[index % LINES])-1,stdin) == 0) {
         fprintf(stderr,"Reached EOF on stdin.\n");
@@ -92,6 +104,7 @@ int main(int argc,char *argv[]) {
         }
         signal(SIGUSR1,SIG_IGN);
         signal(SIGUSR2,SIG_IGN);
+        signal(SIGTERM,SIG_DFL);
         execlp(argv[1],argv[1],line[index % LINES],NULL);
 	perror("execlp");
         return -2;//child failed to exec. tell it to fuck off.
