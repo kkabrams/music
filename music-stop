@@ -7,8 +7,8 @@ if [ -f "$file" ];then
   rm -f "$file"
   if [ "$(ps -h -o cmd -p "$pid")" = "qargs music-player" ];then
     printf "found qargs music-player running with pid %d. killing.\n" "$pid" >&2
-    pkill -2 -P "$pid"
-    kill -2 "$pid"
+    pkill -P "$pid"
+    kill "$pid"
   else
     printf "stale init.pid\n" >&2
   fi
@@ -16,10 +16,12 @@ if [ -f "$file" ];then
   if [ -f "$file" ];then
     pid="$(cat "$file")"
     rm -f "$file"
-    pkill -2 -P "$pid"
-    kill -2 "$pid"
+    pkill -P "$pid"
+    kill "$pid"
     exit 0
   fi
   logger -n logserver "player.pid was missing."
+else
+  printf "init.pid is gone." >&2
 fi
 logger -n logserver "init.pid was missing."
