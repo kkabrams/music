@@ -42,3 +42,8 @@ install: all
 	install youtube $(PREFIX)/bin/
 	install music-search $(PREFIX)/bin/
 	install music-albumart $(PREFIX)/bin/
+	install music-record $(PREFIX)/bin/
+	install music-push $(PREFIX)/bin/
+	install music-pushmeta $(PREFIX)/bin/
+	install music-updateplaying $(PREFIX)/bin/
+	install -t $(PREFIX)/bin/ music-pop
